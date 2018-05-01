@@ -8,6 +8,11 @@
 
 package com.krun.spring.extend.mapping.utils;
 
+import com.krun.spring.extend.mapping.DomainMapping;
+import com.krun.spring.extend.mapping.RestDomainMapping;
+import org.springframework.core.annotation.AnnotatedElementUtils;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -70,6 +75,38 @@ public class Utils {
 
 		builder.append(") :").append(method.getReturnType().getSimpleName());
 		return builder.toString();
+	}
+
+	public static String translateName(String name) {
+		StringBuilder builder = new StringBuilder();
+		char[] array = name.toCharArray();
+		for (int i = 0; i < array.length; i++) {
+			char c = array[i];
+			if ('a' <= c && c <= 'z') {
+				builder.append(c);
+			} else if ('A' <= c && c <= 'Z') {
+				if (i != 0) {
+					builder.append('-');
+				}
+				builder.append((char)(c + 32));
+			} else if ('/' == c) {
+				builder.append('.');
+			} else  {
+				builder.append(c);
+			}
+		}
+		return builder.toString();
+	}
+
+	public static Annotation findAnnotation (AnnotatedElement element) {
+		Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(element, DomainMapping.class);
+		if (annotation == null) {
+			annotation = AnnotatedElementUtils.findMergedAnnotation(element, RestDomainMapping.class);
+			if (annotation == null) {
+				return null;
+			}
+		}
+		return annotation;
 	}
 
 }

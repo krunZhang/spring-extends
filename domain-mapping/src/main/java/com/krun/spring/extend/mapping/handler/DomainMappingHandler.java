@@ -24,6 +24,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import static com.krun.spring.extend.mapping.utils.Utils.findAnnotation;
+
 /**
  * @author krun
  * @date 2018/05/01
@@ -180,16 +182,5 @@ public class DomainMappingHandler extends RequestMappingHandlerMapping {
 	private boolean hasAnnotation(AnnotatedElement element) {
 		return AnnotatedElementUtils.hasAnnotation(element, DomainMapping.class)
 				|| AnnotatedElementUtils.hasAnnotation(element, RestDomainMapping.class);
-	}
-
-	private Annotation findAnnotation (AnnotatedElement element) {
-		Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(element, DomainMapping.class);
-		if (annotation == null) {
-			annotation = AnnotatedElementUtils.findMergedAnnotation(element, RestDomainMapping.class);
-			if (annotation == null) {
-				return null;
-			}
-		}
-		return annotation;
 	}
 }
