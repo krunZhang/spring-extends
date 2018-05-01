@@ -37,15 +37,15 @@ public DemoUserServiceController extends DemoFrontController {
 
 ### 配置路径名称解析
 
-首先需要配置路径名称解析，实现 *RouteNameProvider* 接口中的 *provider* 即可:
+首先需要配置路径名称解析，实现 *MappingNameResolver* 接口中的 *resolve* 方法即可:
 
 ```java
 @Component
-public MyRouteNameProvider implements MappingNameResolver {
+public MyNameResolver implements MappingNameResolver {
     
     @Override
-     public String[] provide(Class<?> clazz, Method method, String[] path) {
-        // 此处根据传入参数返回一个路径。
+     public String[] resolve(Class<?> clazz, Method method, String[] path) {
+        // 此处根据传入参数返回一组路径。
     }
     
 }
@@ -63,7 +63,7 @@ public MyRouteNameProvider implements MappingNameResolver {
 
 ```java
 @Component
-public class RouteNameProviderImpl extends AbstractMappingNameResolver {
+public class MyNameResolver extends AbstractMappingNameResolver {
 
 	@Override // 前缀
 	protected String getPrefix () {
@@ -148,7 +148,7 @@ public DemoUserServiceController extends DemoFrontController {}
 >
 > `@DomainMapping` 只有 `root` 属性具有传递性，其他所有属性都只能用于当前类的路径生成。
 
-### 注册`DomainRequestMappingHandlerMapping`
+### 注册`DomainMappingHandler`
 
 在 *Spring-Boot* 中需要实现 *WebMvcRegistrations* 接口并实现 `getRequestMappingHandlerMapping` 方法 :
 
@@ -165,7 +165,7 @@ public class WebMvcConfig implements WebMvcRegistrations {
 
 	@Override
 	public RequestMappingHandlerMapping getRequestMappingHandlerMapping () {
-		return new DomainRequestMappingHandlerMapping(nameResolver);
+		return new DomainMappingHandler(nameResolver);
 	}
 }
 ```
