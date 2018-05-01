@@ -12,7 +12,7 @@
     <artifactId>domain-mapping</artifactId>
 
     <name>domain-mapping</name>
-    <url>https://github.com/krunZhang/spring-extends/domain-mapping</url>
+    <url>https://github.com/krunZhang/spring-extends/tree/master/domain-mapping</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
