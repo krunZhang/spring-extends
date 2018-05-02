@@ -118,11 +118,13 @@ public abstract class AbstractMappingNameResolver implements MappingNameResolver
 			Annotation annotation = Utils.findAnnotation(clazz);
 
 			if (annotation == null) {
+				System.out.println(Utils.getClassDeclaration(clazz) + " 没有注解");
 				clazz = Object.class;
 				continue;
 			}
 
 			if (! getRoot(annotation).isEmpty()) {
+				System.out.println(Utils.getClassDeclaration(clazz) + " root 属性非空");
 				root = getRoot(annotation);
 				root = root.startsWith("/") ? root.substring(1) : root;
 				allPaths.add(new String[] { root });

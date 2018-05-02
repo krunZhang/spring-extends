@@ -161,8 +161,8 @@ public class DomainMappingHandler extends RequestMappingHandlerMapping {
 	}
 
 	private RequestMapping generateRequestMapping (AnnotatedElement element) {
-		Annotation annotation = findAnnotation(element);
 		String[] path = generatePath(element);
+		Annotation annotation = findAnnotation(element instanceof Method ? ((Method) element).getDeclaringClass() : element);
 		if (annotation instanceof DomainMapping) {
 			return generateRequestMapping(((DomainMapping) annotation).name(), path, path,
 			                              ((DomainMapping) annotation).method(), ((DomainMapping) annotation).params(),
@@ -176,7 +176,7 @@ public class DomainMappingHandler extends RequestMappingHandlerMapping {
 				                              ((RestDomainMapping) annotation).headers(),
 				                              ((RestDomainMapping) annotation).consumes(),
 				                              ((RestDomainMapping) annotation).produces());
-			}
+		}
 	}
 
 	private boolean hasAnnotation(AnnotatedElement element) {

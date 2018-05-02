@@ -10,7 +10,6 @@ package com.krun.spring.extend.mapping.utils;
 
 import com.krun.spring.extend.mapping.DomainMapping;
 import com.krun.spring.extend.mapping.RestDomainMapping;
-import org.springframework.core.annotation.AnnotatedElementUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -99,9 +98,9 @@ public class Utils {
 	}
 
 	public static Annotation findAnnotation (AnnotatedElement element) {
-		Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(element, DomainMapping.class);
+		Annotation annotation = element.getAnnotation(DomainMapping.class);
 		if (annotation == null) {
-			annotation = AnnotatedElementUtils.findMergedAnnotation(element, RestDomainMapping.class);
+			annotation = element.getAnnotation(RestDomainMapping.class);
 			if (annotation == null) {
 				return null;
 			}
