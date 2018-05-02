@@ -230,3 +230,17 @@ public DemoUserServiceController {
 * [x] 使被 `@DomainMapping` 修饰的类的公开非静态方法可以由方法名来绑定路径
 
 ## 更新
+
+### v 1.2
+
+修复 `MappingNameResolver` 抽象基类实现组成路径时丢失当前类信息的问题
+
+### v 1.1
+
+提供 `MappingNameResolver` 接口的抽象基类实现，它负责将驼峰命名转换为连字符命名。
+
+### v 1.0
+
+提供 `@DomainMapping` 注解
+
+提供 `@RestDomainMapping` 注解
