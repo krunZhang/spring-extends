@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 路由结构，用以保存路由信息
+ *
  * @author krun
  * @date 2018/05/03
  */
@@ -29,14 +31,38 @@ import java.util.List;
 @NoArgsConstructor
 public class Route {
 
+	/**
+	 * 路由名称
+	 */
 	String name;
+
+	/**
+	 * 路由路径，用于构造树，不传递到外界
+	 */
 	@JSONField(serialize = false)
 	String path;
+
+	/**
+	 * 路由所包含的所有 beanType, 用于构造树，不传递到外界
+	 */
 	@JSONField(serialize = false)
 	List<Class<?>> beanTypes;
+
+	/**
+	 * 路由所包含的方法，如果当前路由不是叶结点，则此属性为空
+	 */
 	List<Handler> handlers;
+
+	/**
+	 * 子路由
+	 */
 	List<Route> routes;
 
+	/**
+	 * 获取筛选后的路由树
+	 * @param includeClasses 路由树内只允许含有此参数所配置的 beanTypes
+	 * @return
+	 */
 	public List<Route> getRoutes(Class[] includeClasses) {
 
 		List<Route> list = new LinkedList<>();
@@ -58,6 +84,9 @@ public class Route {
 
 	}
 
+	/**
+	 * 构造完毕后对 name 属性进行初始化并置空无效的子路由
+	 */
 	public void clean() {
 		if (this.routes != null && this.routes.size() == 0) {
 			this.routes = null;
@@ -78,6 +107,11 @@ public class Route {
 	public String toString () {
 		return JSONObject.toJSONString(this);
 	}
+
+	/**
+	 * 构造路由树
+	 * @param route
+	 */
 	public void pushAsChild(Route route) {
 
 		/* 检查子元素中是否有能匹配的节点 */
@@ -88,15 +122,18 @@ public class Route {
 					continue;
 				}
 
+				/* 等价路由节点，即由同一个类所生成的路由 */
 				if (isPathEquals(child, route)) {
 					List<Handler> handlers = child.getHandlers();
 					if (handlers == null) {
 						handlers = new LinkedList<>();
 						child.setHandlers(handlers);
 					}
+					/* 复制等价节点的路由方法信息 */
 					handlers.addAll(route.getHandlers());
 
 				} else {
+					/*非等价路由，裁剪后加入子路由*/
 					child.pushAsChild(splitPath(child, route));
 				}
 

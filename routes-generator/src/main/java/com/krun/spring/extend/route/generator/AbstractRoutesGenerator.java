@@ -10,6 +10,7 @@ package com.krun.spring.extend.route.generator;
 
 import com.krun.spring.extend.route.Handler;
 import com.krun.spring.extend.route.Route;
+import com.krun.spring.extend.route.convert.AbstractRequestConditionConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
@@ -28,14 +29,34 @@ public abstract class AbstractRoutesGenerator {
 
 	private Route root = null;
 
+	/**
+	 * 获取前缀以对类名进行裁剪
+	 * @return
+	 */
 	protected abstract String getPrefix();
+
+	/**
+	 * 获取后缀以对类名进行裁剪
+	 * @return
+	 */
 	protected abstract String getSuffix();
+
+	/**
+	 * 检查当前 beanType 是否为所需类型
+	 * @param beanType
+	 * @return
+	 */
 	protected abstract boolean isExcludeType(Class<?> beanType);
 
 	public String getRoutes() {
 		return getRoutes(new Class[0]);
 	}
 
+	/**
+	 * 获取路由树（经 includeClasses 参数修建），如果参数数组长度为零，则获取所有路由
+	 * @param includeClasses
+	 * @return
+	 */
 	public String getRoutes(Class[] includeClasses) {
 		if (root == null) {
 			generateRoutes();
@@ -47,11 +68,13 @@ public abstract class AbstractRoutesGenerator {
 		return route.toString();
 	}
 
+	/**
+	 * 生成路由树
+	 */
 	private void generateRoutes() {
+
 		Map<Class<?>, List<Map.Entry<RequestMappingInfo, HandlerMethod>>> classesMap = getClassesMap();
-
 		List<Class<?>> classes = getClassesBySort(classesMap.keySet());
-
 		List<Route> routes = new LinkedList<>();
 
 		String path;
@@ -65,6 +88,8 @@ public abstract class AbstractRoutesGenerator {
 		HandlerMethod method;
 		Set<String> patterns;
 
+		AbstractRequestConditionConverter[] converters = AbstractRequestConditionConverter.converters();
+
 		for (Class<?> clazz : classes) {
 			path = translateNameToPath(clazz.getSimpleName());
 
@@ -73,9 +98,9 @@ public abstract class AbstractRoutesGenerator {
 			handlers = new LinkedList<>();
 
 			for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : entries) {
+
 				info = entry.getKey();
 				method = entry.getValue();
-
 				patterns = info.getPatternsCondition().getPatterns();
 
 				for (String pattern : patterns) {
@@ -83,6 +108,12 @@ public abstract class AbstractRoutesGenerator {
 							.url(pattern)
 							.name(method.getMethod().getName())
 							.build();
+
+					for (AbstractRequestConditionConverter converter : converters) {
+						converter.setCondition(info);
+						converter.setValuesToHandler(handler);
+					}
+
 					handlers.add(handler);
 				}
 
@@ -101,6 +132,7 @@ public abstract class AbstractRoutesGenerator {
 			root.pushAsChild(r);
 		}
 	}
+
 
 	private String translateNameToPath(String name) {
 		if (name.startsWith(getPrefix())) {
@@ -129,12 +161,17 @@ public abstract class AbstractRoutesGenerator {
 		return 'A' <= c && c <= 'Z';
 	}
 
+	/**
+	 * 根据已注册的路由信息表，构建与类对应的路由表
+	 * @return
+	 */
 	private Map<Class<?>, List<Map.Entry<RequestMappingInfo, HandlerMethod>>> getClassesMap() {
 
 		Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = handlerMapping.getHandlerMethods();
 		Map<Class<?>, List<Map.Entry<RequestMappingInfo, HandlerMethod>>> classesMap = new HashMap<>();
 		List<Map.Entry<RequestMappingInfo, HandlerMethod>> list;
 		Class<?> beanType;
+
 		for (Map.Entry<RequestMappingInfo, HandlerMethod> entry : handlerMethodMap.entrySet()) {
 			beanType = getHandlerBeanType(entry);
 			if (AbstractRoutesGenerator.class.isAssignableFrom(beanType) || isExcludeType(beanType)) {

@@ -25,5 +25,9 @@ public class Handler {
 
 	String name;
 	String url;
-
+	String[] methods;
+	String[] params;
+	String[] headers;
+	String[] consumes;
+	String[] produces;
 }

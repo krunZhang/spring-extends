@@ -104,6 +104,11 @@ public class DemoUserController {
 Handler {
 	name :string,			// 路由方法的名字，由 Controller 中对应的方法名所决定
     url :string				// 路由方法对应的地址
+    methods :string[],		// 路由方法所允许的请求方式
+    params :string[],		// 路由方法对参数方面的要求
+    headers :string[],		// 路由方法请求时需要携带的头部
+    consumes :string[],		// 路由方法所能处理的请求类型
+    produces :string[]		// 路由方法所会产生的响应类型
 }
 
 Route {
@@ -146,15 +151,25 @@ DemoUserAuthController -> UserAuth -> /user/auth
 
 ## TODO
 
-### v 1.1
+### v 1.2
 
 * [ ] 提供 *JavaScript* 端的生成器
+
+### v 1.1
+
+* [x] 完善 `Handler` 结构信息
 
 ### v 1.0
 
 * [x] 提供 `AbstractRoutesGenerator` 抽象基类实现。
 
 ## 更新
+
+### v 1.1
+
+完善 `Handler` 结构信息。
+
+此版本仍不提供 RELEASE 文件。
 
 ### v 1.0
 
