@@ -9,3 +9,7 @@
 ### [domain-mapping](https://github.com/krunZhang/spring-extends/tree/master/domain-mapping)
 
 用于简化路径到 *handler method* 的绑定。
+
+### [routes-generator](https://github.com/krunZhang/spring-extends/tree/master/routes-generator)
+
+用于提供已绑定的 *handler method* 信息到路由树的映射。

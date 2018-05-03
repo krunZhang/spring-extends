@@ -30,6 +30,7 @@ import java.util.List;
 public class Route {
 
 	String name;
+	@JSONField(serialize = false)
 	String path;
 	@JSONField(serialize = false)
 	List<Class<?>> beanTypes;
