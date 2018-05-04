@@ -1,5 +1,7 @@
 # Routes Generators
 
+##由于实现思路上的问题，此项目暂停。##
+
 用于提供已绑定的 *handler method* 信息到路由树的映射。
 
 
