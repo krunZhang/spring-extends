@@ -231,6 +231,10 @@ public DemoUserServiceController {
 
 ## 更新
 
+### v 1.3
+
+修复类名中的 `.` 没有被解析为 `/` 的问题。
+
 ### v 1.2
 
 修复 `MappingNameResolver` 抽象基类实现组成路径时丢失当前类信息的问题

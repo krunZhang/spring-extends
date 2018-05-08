@@ -88,9 +88,7 @@ public class Utils {
 					builder.append('-');
 				}
 				builder.append((char)(c + 32));
-			} else if ('/' == c) {
-				builder.append('.');
-			} else  {
+			} else {
 				builder.append(c);
 			}
 		}
